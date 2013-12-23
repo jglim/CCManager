@@ -1,5 +1,6 @@
-CCManager
-===
+![CCManager header](https://raw.github.com/jglim/CCManager/master/other/images/header-small.png)
+
+
 CCManager is a control panel for a sub-1GHz radio frequency transmitter, with hardware design based on the Texas Instruments CC1101 IC.
 
 I've been looking for a simple, strong sub-1GHz transmitter to complement my receive-only RTL2832U SDR. 
@@ -17,6 +18,9 @@ The hardware design is hacker-friendly where you can mix-and-match parts using w
 CCManager comes in 2 parts - the software here, as well as the hardware consisting of a CC1101 module and USB-SPI bridge.
 
 For receiving RF data, look into the RTLSDR/RTL2832U projects. 
+
+![CCManager software](https://raw.github.com/jglim/CCManager/master/other/images/ccmanager-view.png)
+_The software portion_
 
 Features
 ---
@@ -42,6 +46,11 @@ Written and works on Windows, runs well on Linux via mono.
 Things you can do
 ---
 RF replay attack - attack fixed-code communication devices such as some gates, doorbells and wireless switches. I'll be publishing a guide shortly.
+
+
+![CCManager software](https://raw.github.com/jglim/CCManager/master/other/images/doorbell.gif)
+
+_fixed code doorbell being triggered wirelessly by CCManager_
 
 Build your own
 ---
@@ -87,5 +96,3 @@ I'd also like to thank the guys at Panstamp, where they have released their code
 The hardware they sell ([Panstamp](http://www.panstamp.com/products/wirelessarduino)) consists of an Arduino and a CC1101 module, making it a great fit. That means that you can likely modify the firmware code and use the Panstamp as a really small CCManager hardware. Unfortunately they don't ship to where I am so I am unable to verify if that works. (Do let me know if it does!)
 
 There are also "UART" versions of the CC1101 modules from China. From what I observe, they use an Atmega168 to process AT commands from the UART. If you are feeling adventurous, it should be possible to reflash the firmware on the Atmega168 and use it as a CCManager hardware.
-
-__fixme: add images to this readme.md__
