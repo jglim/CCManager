@@ -109,7 +109,7 @@ namespace CCManager
 			{"FIFOTHR", 0x47},
 			{"PKTCTRL0", 0x01},
 			{"FSCTRL1", 0x06},
-			{"MDMCFG2", 0x33},
+			{"MDMCFG2", 0x30},
 			{"MDMCFG1", 0x02},
 			{"DEVIATN", 0x15},
 			{"MCSM1", 0x00},
