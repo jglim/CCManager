@@ -45,7 +45,7 @@ Written and works on Windows, runs well on Linux via mono.
 
 Things you can do
 ---
-RF replay attack - attack fixed-code communication devices such as some gates, doorbells and wireless switches. I'll be publishing a guide shortly.
+RF replay attack - attack fixed-code communication devices such as some gates, doorbells and wireless switches. ~~I'll be publishing a guide shortly~~ (shortly: 3 years). A guide is now available [here](https://github.com/jglim/CCManager/files/612566/CCManager.pdf).
 
 
 ![CCManager software](https://raw.github.com/jglim/CCManager/master/other/images/doorbell.gif)
@@ -87,7 +87,7 @@ Limitations
 ---
 Restricted to 61 bytes of data per transmission. The USB-SPI bridge appears to be incapable of communicating fast enough, and also I do not know if it is possible to disable the entire RX FIFO so that the TX FIFO can be doubled.
 
-I haven't figured a way to disable the CC1101's preamble and sync transmission. However most transmissions still work fine since only the first portion (may) be discarded.
+~~I haven't figured a way to disable the CC1101's preamble and sync transmission. However most transmissions still work fine since only the first portion (may) be discarded.~~ This has been fixed. Thanks [@AzInstall](https://github.com/AzInstall) !
 
 Other Notes
 ---
