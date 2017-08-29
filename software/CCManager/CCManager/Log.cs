@@ -16,7 +16,7 @@ namespace CCManager
 		// Major events at 2
 		// Tracing values at 3
 		// Debug data at 4
-		public static int LogLevel = 10;
+		public static int LogLevel = 2;
 		
 		public static void Info(string dataToLog, int logLevel)
 		{

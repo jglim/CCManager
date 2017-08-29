@@ -51,7 +51,7 @@ namespace CCManager
 		
 		public void SetupRegisters()
 		{
-			Log.Info("Writing Registers", 1);
+			Log.Info("Writing Registers", 4);
 			
 			foreach (KeyValuePair<string, byte> configurationRegisterValue in CCRegister.ConfigurationRegisterValues)
 			{
@@ -171,8 +171,8 @@ namespace CCManager
 		
 		public void ShortWait()
 		{
-			Log.Info("Waiting for CC1101 - 250ms", 1);
-			Serial.Delay(sp, 250);
+			Log.Info("Waiting for CC1101 - 50ms", 4);
+			Serial.Delay(sp, 50);
 		}
 		
 		public void Transmit(byte[] dataToTransmit)
