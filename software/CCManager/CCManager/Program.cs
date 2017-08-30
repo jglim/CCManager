@@ -102,9 +102,18 @@ namespace CCManager
             }
             else
             {
-                for (int i = 0; i < hexData.Length; i += 2)
+                try
                 {
-                    hexDataBytes.Add(byte.Parse(hexData[i].ToString() + hexData[i + 1].ToString(), System.Globalization.NumberStyles.HexNumber));
+                    for (int i = 0; i < hexData.Length; i += 2)
+                    {
+                        hexDataBytes.Add(byte.Parse(hexData[i].ToString() + hexData[i + 1].ToString(), System.Globalization.NumberStyles.HexNumber));
+                    }
+                }
+
+                catch (Exception ex)
+                {
+                    Log.Error(ex.Message);
+                    Environment.Exit(0);
                 }
             }
 
@@ -113,19 +122,27 @@ namespace CCManager
             if (canStartInConsoleMode)
             {
                 Log.Info("Starting CCManager in Console mode");
-                
-                RF rf = new RF(new SerialPort(serialPortName, CCRegister.BRIDGE_BAUD_RATE));
 
-                rf.Reset();
-                rf.SetupPATABLE();
-                rf.SetCarrierFrequency(frequencyMhzDouble);
-                rf.SetBaudRate(baudRateDouble);
-                rf.SetupRegisters();
-                rf.EnterIdleState();
-                rf.ShortWait();
-                
-                rf.Transmit(hexDataBytes.ToArray());
-                rf.CloseSerial();
+                try
+                {
+                    RF rf = new RF(new SerialPort(serialPortName, CCRegister.BRIDGE_BAUD_RATE));
+
+                    rf.Reset();
+                    rf.SetupPATABLE();
+                    rf.SetCarrierFrequency(frequencyMhzDouble);
+                    rf.SetBaudRate(baudRateDouble);
+                    rf.SetupRegisters();
+                    rf.EnterIdleState();
+                    rf.ShortWait();
+
+                    rf.Transmit(hexDataBytes.ToArray());
+                    rf.CloseSerial();
+                }
+                catch (Exception ex)
+                {
+                    Log.Error(ex.Message);
+                }
+
             }
             else
             {

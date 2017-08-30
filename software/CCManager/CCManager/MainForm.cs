@@ -133,7 +133,15 @@ namespace CCManager
 			List<byte> result = new List<byte>();
 			foreach (string stringByte in stringBytes)
 			{
-				result.Add((byte)Convert.ToInt32(stringByte, 16));
+                try
+                {
+                    result.Add((byte)Convert.ToInt32(stringByte, 16));
+                }
+                catch (Exception ex)
+                {
+                    Log.Error(ex.Message);
+                    continue;
+                }
 			}
 			return result;
 		}
@@ -141,8 +149,15 @@ namespace CCManager
 		void BtnTransmitOnlyClick(object sender, EventArgs e)
 		{
 			((Button)sender).Enabled = false;
-			
-            rf.Transmit(ParseTransmitDataTextbox().ToArray());	
+            List<byte> transmitBytes = ParseTransmitDataTextbox();
+            if (transmitBytes.Count != 0)
+            {
+                rf.Transmit(transmitBytes.ToArray());
+            }
+            else
+            {
+                Log.Error("Nothing to transmit");
+            }
             ((Button)sender).Enabled = true;
 		}
 		
@@ -150,8 +165,15 @@ namespace CCManager
 		void BtnWriteRegistersClick(object sender, EventArgs e)
 		{
 			((Button)sender).Enabled = false;
-			rf.SetCarrierFrequency(double.Parse(txtCarrierFrequency.Text));
-			rf.SetBaudRate(double.Parse(txtBaudRate.Text));
+            try
+            {
+                rf.SetCarrierFrequency(double.Parse(txtCarrierFrequency.Text));
+                rf.SetBaudRate(double.Parse(txtBaudRate.Text));
+            }
+            catch (Exception ex)
+            {
+                Log.Error(ex.Message);
+            }
        		((Button)sender).Enabled = true;
 		}
 		
@@ -204,19 +226,26 @@ namespace CCManager
 			
 			if (registerDialog.ShowDialog() == DialogResult.OK)
 			{
-				string[] registerKeyValues = txtRegisterValues.Text.Split(',');
-				foreach (string registerKeyValueString in registerKeyValues)
-				{
-					string[] registerKeyValueArray = registerKeyValueString.Split('=');
-					string registerKey = registerKeyValueArray[0].Trim().ToUpper();
-					string registerValue = registerKeyValueArray[1].Trim();
-					
-					CCRegister.ConfigurationRegisterValues[registerKey] = (byte)Convert.ToInt32(registerValue, 16);
-				}
-				rf.SetupRegisters();
-				txtBaudRate.Text = rf.GetBaudRate().ToString();
-				txtCarrierFrequency.Text = rf.GetCarrierFrequency().ToString();
-				Log.Info("Registers OK", 2);
+                try
+                {
+                    string[] registerKeyValues = txtRegisterValues.Text.Split(',');
+                    foreach (string registerKeyValueString in registerKeyValues)
+                    {
+                        string[] registerKeyValueArray = registerKeyValueString.Split('=');
+                        string registerKey = registerKeyValueArray[0].Trim().ToUpper();
+                        string registerValue = registerKeyValueArray[1].Trim();
+
+                        CCRegister.ConfigurationRegisterValues[registerKey] = (byte)Convert.ToInt32(registerValue, 16);
+                    }
+                    rf.SetupRegisters();
+                    txtBaudRate.Text = rf.GetBaudRate().ToString();
+                    txtCarrierFrequency.Text = rf.GetCarrierFrequency().ToString();
+                    Log.Info("Registers OK", 2);
+                }
+                catch (Exception ex)
+                {
+                    Log.Error(ex.Message);
+                }
 			}
 			else 
 			{
@@ -346,31 +375,39 @@ namespace CCManager
 			
 			if (simplicitiImport.ShowDialog() == DialogResult.OK)
 			{
-				// test if it looks ok
-				string signature = "_RADIO_";
-				if (txtRegisterValues.Text.Contains(signature))
-				{
-					string rawData = txtRegisterValues.Text.Replace("#endif", "");
-					List<string> registerKeyValues = new List<string>(rawData.Remove(0, rawData.IndexOf(signature)).Replace("SMARTRF_SETTING_","").Replace("#define ", ",").Split(','));
-					if (registerKeyValues.Count != 0)
-					{
-						registerKeyValues.RemoveAt(0);
-					}
-					foreach (string registerKeyValue in registerKeyValues) 
-					{
-						string[] registerKeyValueArray = registerKeyValue.Replace("0x", ",").Split(',');
-						string registerKey = registerKeyValueArray[0].Trim().ToUpper();
-						byte registerValue = (byte)Convert.ToInt32(registerKeyValueArray[1].Trim(), 16);
-						
-						CCRegister.ConfigurationRegisterValues[registerKey] = registerValue;
-						
-						Log.Info(string.Format("TI Key: {0} Value: {1:X}", registerKey, registerValue), 3);
-					}
-					rf.SetupRegisters();
-					txtBaudRate.Text = rf.GetBaudRate().ToString();
-					txtCarrierFrequency.Text = rf.GetCarrierFrequency().ToString();
-					Log.Info("SimpliciTI Registers OK", 2);
-				}
+
+                try
+                {
+                    // test if it looks ok
+                    string signature = "_RADIO_";
+                    if (txtRegisterValues.Text.Contains(signature))
+                    {
+                        string rawData = txtRegisterValues.Text.Replace("#endif", "");
+                        List<string> registerKeyValues = new List<string>(rawData.Remove(0, rawData.IndexOf(signature)).Replace("SMARTRF_SETTING_", "").Replace("#define ", ",").Split(','));
+                        if (registerKeyValues.Count != 0)
+                        {
+                            registerKeyValues.RemoveAt(0);
+                        }
+                        foreach (string registerKeyValue in registerKeyValues)
+                        {
+                            string[] registerKeyValueArray = registerKeyValue.Replace("0x", ",").Split(',');
+                            string registerKey = registerKeyValueArray[0].Trim().ToUpper();
+                            byte registerValue = (byte)Convert.ToInt32(registerKeyValueArray[1].Trim(), 16);
+
+                            CCRegister.ConfigurationRegisterValues[registerKey] = registerValue;
+
+                            Log.Info(string.Format("TI Key: {0} Value: {1:X}", registerKey, registerValue), 3);
+                        }
+                        rf.SetupRegisters();
+                        txtBaudRate.Text = rf.GetBaudRate().ToString();
+                        txtCarrierFrequency.Text = rf.GetCarrierFrequency().ToString();
+                        Log.Info("SimpliciTI Registers OK", 2);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Log.Error(ex.Message);
+                }
 			}
 		}
 	}
