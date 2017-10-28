@@ -77,6 +77,7 @@ namespace CCManager
                 canStartInConsoleMode = false;
             }
 
+            bool desiredSerialPortIsAvailable = false;
             foreach (string availablePort in SerialPort.GetPortNames())
             {
                 if (availablePort.ToUpper() == serialPortName.ToUpper())
@@ -89,12 +90,14 @@ namespace CCManager
                     }
                     else
                     {
+                        desiredSerialPortIsAvailable = true;
                         break;
                     }
                     sp.Dispose();
                 }
-                canStartInConsoleMode = false;
             }
+            
+            canStartInConsoleMode &= desiredSerialPortIsAvailable;
 
             if (hexData.Length % 2 != 0)
             {
